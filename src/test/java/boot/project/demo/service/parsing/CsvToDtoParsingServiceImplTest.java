@@ -1,13 +1,16 @@
 package boot.project.demo.service.parsing;
 
 import boot.project.demo.dto.ReviewRequestDto;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 
 class CsvToDtoParsingServiceImplTest {
     private static final String FILE_TEST_OK = "src/test/resources/test_dto_ok.csv";
+    private static final String FILE_TEST_EMPTY_FILE = "src/test/resources/test_empty_file.csv";
+    private static final String FILE_TEST_NO_FILE = "C::/docs";
     private static final List<ReviewRequestDto> expectedReviewDto = List.of(
             ReviewRequestDto.builder()
             .id("1")
@@ -50,6 +53,19 @@ class CsvToDtoParsingServiceImplTest {
     @Test
     public void parseTest_Ok() {
         List<ReviewRequestDto> actual = fileToDataParsingService.parse(FILE_TEST_OK);
-        Assertions.assertEquals(actual, expectedReviewDto);
+        Assertions.assertEquals(expectedReviewDto, actual);
+    }
+
+    @Test
+    public void parseTestEmptyFile() {
+        List<ReviewRequestDto> expectedEmpty = new ArrayList<>();
+        List<ReviewRequestDto> actual = fileToDataParsingService.parse(FILE_TEST_EMPTY_FILE);
+        Assertions.assertEquals(expectedEmpty, actual);
+    }
+
+    @Test
+    public void parseTestNoFile() {
+        Assertions.assertThrows(RuntimeException.class,
+                () -> fileToDataParsingService.parse(FILE_TEST_NO_FILE));
     }
 }
